@@ -3,15 +3,15 @@
 	"id": "donutsmp-utilities",
 	"version": "${version}",
 	"name": "DonutSMP Utilities",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "See DonutSMP auction status.",
 	"authors": [
-		"Me!"
+		"AylexDXD"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://github.com/AylexCODE/donutsmp-utilities",
+		"sources": "https://github.com/AylexCODE/donutsmp-utilities"
 	},
-	"license": "CC0-1.0",
+	"license": "MIT",
 	"icon": "assets/donutsmp-utilities/icon.png",
 	"environment": "*",
 	"entrypoints": {
