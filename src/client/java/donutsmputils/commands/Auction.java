@@ -13,7 +13,6 @@ import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 public class Auction {
@@ -23,7 +22,10 @@ public class Auction {
             return 0;
         }
 
-        MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Auction House Data..."), false);
+        AuctionScreen auctionScreen = new AuctionScreen();
+        // MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Auction House Data..."), false);
+        MinecraftClient client = context.getSource().getClient();
+        client.send(() -> client.setScreen(auctionScreen));
         CompletableFuture.runAsync(() -> {
             try {
                 ArrayList<AuctionData> data = RequestData.getAuctionData(StringArgumentType.getString(context, "Page"), StringArgumentType.getString(context, "Search"), true);
@@ -36,8 +38,7 @@ public class Auction {
                 //         }
                 //     }
                 // });
-                MinecraftClient client = context.getSource().getClient();
-                client.send(() -> client.setScreen(new AuctionScreen(data)));
+                auctionScreen.setData(data);
             }catch(Exception e){
                 if(MinecraftClient.getInstance() != null) MinecraftClient.getInstance().player.sendMessage(Text.of("An error occurred: " + e.getMessage()), false);
             }

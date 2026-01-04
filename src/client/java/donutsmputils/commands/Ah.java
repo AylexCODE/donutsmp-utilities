@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import donutsmputils.components.Auction.AuctionScreen;
+import donutsmputils.components.Auction.AhScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
@@ -23,8 +23,12 @@ public class Ah {
             MinecraftClient.getInstance().player.sendMessage(Text.of("No Username Found for DonutSMP.\n/dsmpu username [your username]"), false);
             return 1;
         }
+        
+        AhScreen ah = new AhScreen();
+        // MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Your Action House Data..."), false);
+        MinecraftClient client = context.getSource().getClient();
+        client.send(() -> client.setScreen(ah));
 
-        MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Your Action House Data..."), false);
         CompletableFuture.runAsync(() -> {
             try {
                 ArrayList<AuctionData> data = RequestData.getAuctionData("", "", false);
@@ -38,8 +42,7 @@ public class Ah {
                 //         }
                 //     }
                 // });
-                MinecraftClient client = context.getSource().getClient();
-                client.send(() -> client.setScreen(new AuctionScreen(data)));
+                ah.setData(data);
             }catch(Exception e){
                 if(MinecraftClient.getInstance() != null) MinecraftClient.getInstance().player.sendMessage(Text.of("An error occurred: " + e.getMessage()), false);
             }

@@ -19,11 +19,16 @@ public class AuctionScreen extends Screen {
     private static final int ELEMENT_HEIGHT = 20;
     private static final int ELEMENT_SPACING = 10;
     private ArrayList<AuctionData> data;
+    private boolean isLoading = true;
     private int currentPageNumber = 1;
 
-    public AuctionScreen(ArrayList<AuctionData> data){
+    public AuctionScreen(){
         super(Text.of("AuctionScreen"));
+    }
+    
+    public void setData(ArrayList<AuctionData> data){
         this.data = data;
+        this.isLoading = false;
     }
 
     public void init(){
@@ -57,7 +62,11 @@ public class AuctionScreen extends Screen {
         int size = 16;
         int slotNumber = 1;
 
-        context.drawText(this.textRenderer, Text.literal("Auction (Page " +currentPageNumber  +")"), x, y - 11, 0xFF444444, false);
+        if(isLoading){
+            context.drawText(this.textRenderer, Text.literal("..."), x, y - 11, 0xFF444444, false);
+        }else{
+            context.drawText(this.textRenderer, Text.literal("Auction (Page " +currentPageNumber  +")"), x, y - 11, 0xFF444444, false);
+        }
 
         for(AuctionData item : data){
             context.drawItem(item.getItemData(), x, y);

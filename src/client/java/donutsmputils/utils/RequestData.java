@@ -40,7 +40,7 @@ public class RequestData {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            System.err.println(response.body());
+            // System.err.println(response.body());
             Gson gson = new Gson();
             if (response.statusCode() == 200) {
                 Response rs = gson.fromJson(response.body(), Response.class);
