@@ -25,16 +25,16 @@ public class Ah {
         MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Your Action House Data..."), false);
         CompletableFuture.runAsync(() -> {
             try {
-                ArrayList<String> data = RequestData.getAuctionData("", "", false);
+                // ArrayList<String> data = RequestData.getAuctionData("", "", false);
 
-                MinecraftClient client = MinecraftClient.getInstance();
-                client.execute(() -> {
-                    if(client != null){
-                        for(String item : data){
-                            client.player.sendMessage(Text.of(item), false);
-                        }
-                    }
-                });
+                // MinecraftClient client = MinecraftClient.getInstance();
+                // client.execute(() -> {
+                //     if(client != null){
+                //         for(String item : data){
+                //             client.player.sendMessage(Text.of(item), false);
+                //         }
+                //     }
+                // });
             }catch(Exception e){
                 if(MinecraftClient.getInstance() != null) MinecraftClient.getInstance().player.sendMessage(Text.of("An error occurred: " + e.getMessage()), false);
             }

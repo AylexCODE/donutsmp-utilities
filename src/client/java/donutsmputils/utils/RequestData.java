@@ -9,13 +9,18 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
+
 public class RequestData {
-    public static ArrayList<String> getAuctionData(String page, String search, boolean isSearching) {
-        ArrayList<String> result = new ArrayList<>();
+    public static ArrayList<AuctionData> getAuctionData(String page, String search, boolean isSearching) {
+        ArrayList<AuctionData> result = new ArrayList<>();
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request;
 
@@ -35,28 +40,36 @@ public class RequestData {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            // System.err.println(response.body());
+            System.err.println(response.body());
             Gson gson = new Gson();
             if (response.statusCode() == 200) {
                 Response rs = gson.fromJson(response.body(), Response.class);
                 NumberFormat priceFormat = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);
                 int i = 1;
                 for(ResponseResult item : rs.getResult()){
+                    System.out.println(i +" " +item.getItem().getId());
+                        i++;
                     if(item != null){
-                        String itemString = "";
-                        String displayName = toTitleCase(item.getItem().getId().split(":")[1].replaceAll("_", " "));
+                        String itemId = item.getItem().getId();
                         String price = priceFormat.format(item.getPrice());
-                        itemString += ("[" +item.getItem().getCount() +"] " +displayName +" | " +price +" - (" +(i++) +")");
-                        result.add(itemString);
+                        long timeLeft = item.getTimeLeft();
+
+                        long hours = TimeUnit.MILLISECONDS.toHours(timeLeft);
+                        long minutes = TimeUnit.MILLISECONDS.toMinutes(timeLeft) % 60;
+                        long seconds = TimeUnit.MILLISECONDS.toSeconds(timeLeft) % 60;
+
+                        String time = String.format("%02dh %02dm %02ds", hours, minutes, seconds).toString();
+
+                        result.add(new AuctionData(new ItemStack(Registries.ITEM.get(Identifier.of(itemId)), item.getItem().getCount()), price, time, item.getSeller().getName()));
                     }
                 }
             }else{
                 // System.err.println("API Call Failed with status code: " + response.statusCode());
                 // System.err.println(response.body());
                 if(response.statusCode() == 500){
-                    result.add("No Items To Display...");
+                    // result.add("No Items To Display...");
                 }else if(response.statusCode() == 401){
-                    result.add("Error Invalid API KEY");
+                    // result.add("Error Invalid API KEY");
                 }
             }
         } catch (IOException | InterruptedException e) {
@@ -80,10 +93,10 @@ public class RequestData {
     }
 
     static class ResponseResult {
-        // private Seller seller;
-        // @SerializedName("time_left")
+        private Seller seller;
+        @SerializedName("time_left")
+        private long timeLeft;
         private long price;
-        // private long timeLeft;
         private Item item;
 
         public Item getItem(){
@@ -93,25 +106,33 @@ public class RequestData {
         public long getPrice(){
             return price;
         }
+
+        public long getTimeLeft(){
+            return timeLeft;
+        }
+
+        public Seller getSeller(){
+            return seller;
+        }
     }
 
-    // static class Seller {
-    //     private String name;
-    //     private String uuid;
-    // }
+    static class Seller {
+        private String name;
+        // private String uuid;
+
+        public String getName(){
+            return name;
+        }
+    }
 
     static class Item {
         private String id;
         private int count;
-        @SerializedName("display_name")
-        private String displayName;
+        // @SerializedName("display_name")
+        // private String displayName;
         // private List<String> lore;
         // private Enchants enchants;
         // private Object contents;
-
-        public String getDisplayName(){
-            return displayName;
-        }
 
         public String getId(){
             return id;
@@ -136,26 +157,26 @@ public class RequestData {
     //     private String pattern;
     // }
 
-    public static String toTitleCase(String input) {
-        if (input == null || input.isEmpty()) {
-            return "";
-        }
+    // public static String toTitleCase(String input) {
+    //     if (input == null || input.isEmpty()) {
+    //         return "";
+    //     }
 
-        StringBuilder titleCase = new StringBuilder();
-        boolean nextCharShouldBeCapital = true;
+    //     StringBuilder titleCase = new StringBuilder();
+    //     boolean nextCharShouldBeCapital = true;
 
-        for (char ch : input.toCharArray()) {
-            if (Character.isWhitespace(ch)) {
-                nextCharShouldBeCapital = true;
-                titleCase.append(ch);
-            } else if (nextCharShouldBeCapital) {
-                titleCase.append(Character.toTitleCase(ch));
-                nextCharShouldBeCapital = false;
-            } else {
-                titleCase.append(Character.toLowerCase(ch));
-            }
-        }
+    //     for (char ch : input.toCharArray()) {
+    //         if (Character.isWhitespace(ch)) {
+    //             nextCharShouldBeCapital = true;
+    //             titleCase.append(ch);
+    //         } else if (nextCharShouldBeCapital) {
+    //             titleCase.append(Character.toTitleCase(ch));
+    //             nextCharShouldBeCapital = false;
+    //         } else {
+    //             titleCase.append(Character.toLowerCase(ch));
+    //         }
+    //     }
 
-        return titleCase.toString();
-    }
+    //     return titleCase.toString();
+    // }
 }
