@@ -45,10 +45,7 @@ public class RequestData {
             if (response.statusCode() == 200) {
                 Response rs = gson.fromJson(response.body(), Response.class);
                 NumberFormat priceFormat = NumberFormat.getCompactNumberInstance(Locale.US, NumberFormat.Style.SHORT);
-                int i = 1;
                 for(ResponseResult item : rs.getResult()){
-                    System.out.println(i +" " +item.getItem().getId());
-                        i++;
                     if(item != null){
                         String itemId = item.getItem().getId();
                         String price = priceFormat.format(item.getPrice());
