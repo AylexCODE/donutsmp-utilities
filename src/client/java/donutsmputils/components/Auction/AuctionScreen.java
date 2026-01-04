@@ -31,20 +31,20 @@ public class AuctionScreen extends Screen {
         this.isLoading = false;
     }
 
-    public void init(){
-        initCloseButton();
-    }
+    // public void init(){
+    //     initCloseButton();
+    // }
 
-    public void initCloseButton(){
-        int closeButtonWidth = 100;
-        int closeButtonX = width - closeButtonWidth - ELEMENT_SPACING;
-        int closeButtonY = ELEMENT_HEIGHT - ELEMENT_SPACING;
-        ButtonWidget closeButton = ButtonWidget.builder(Text.of("Close"), button -> client.setScreen(null))
-            .dimensions(closeButtonX, closeButtonY, closeButtonWidth, ELEMENT_HEIGHT)
-            .build();
+    // public void initCloseButton(){
+    //     int closeButtonWidth = 100;
+    //     int closeButtonX = width - closeButtonWidth - ELEMENT_SPACING;
+    //     int closeButtonY = ELEMENT_HEIGHT - ELEMENT_SPACING;
+    //     ButtonWidget closeButton = ButtonWidget.builder(Text.of("Close"), button -> client.setScreen(null))
+    //         .dimensions(closeButtonX, closeButtonY, closeButtonWidth, ELEMENT_HEIGHT)
+    //         .build();
         
-        addDrawableChild(closeButton);
-    }
+    //     addDrawableChild(closeButton);
+    // }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
