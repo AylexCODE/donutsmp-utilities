@@ -7,15 +7,15 @@ import donutsmputils.utils.AuctionData;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
+// import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class AhScreen extends Screen {
     private static final Identifier TEXTURE = Identifier.of("donutsmp-utilities", "textures/gui/inventory_small.png");
-    private static final int ELEMENT_HEIGHT = 20;
-    private static final int ELEMENT_SPACING = 10;
+    // private static final int ELEMENT_HEIGHT = 20;
+    // private static final int ELEMENT_SPACING = 10;
     private ArrayList<AuctionData> data;
     private boolean isLoading = true;
 
