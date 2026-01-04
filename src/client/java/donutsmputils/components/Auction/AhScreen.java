@@ -60,6 +60,7 @@ public class AhScreen extends Screen {
 
         if(isLoading){
             context.drawText(this.textRenderer, Text.literal("..."), x, y - 11, 0xFF444444, false);
+            return;
         }else{
             context.drawText(this.textRenderer, Text.literal("My Auction House Items"), x, y - 11, 0xFF444444, false);
         }
