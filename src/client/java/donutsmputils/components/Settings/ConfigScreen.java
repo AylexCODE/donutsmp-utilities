@@ -1,6 +1,6 @@
 package donutsmputils.components.Settings;
 
-import donutsmputils.commands.SetConfig;
+import donutsmputils.utils.ConfigManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -45,7 +45,7 @@ public class ConfigScreen extends Screen {
                 statusMessage = Text.of("Fields cannot be empty");
                 statusTitle = Text.of("Error");
             }else{
-                SetConfig config = new SetConfig();
+                ConfigManager config = new ConfigManager();
                 client.setScreen(null);
                 statusTitle = Text.of("Success");
                 statusMessage = Text.of("Configurations set, you can now use dsmpu commands");

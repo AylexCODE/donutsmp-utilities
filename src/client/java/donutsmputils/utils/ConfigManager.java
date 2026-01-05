@@ -32,4 +32,14 @@ public class ConfigManager {
             e.printStackTrace();
         }
     }
+
+    public void setAPIKey(String apikey){
+        INSTANCE.apikey = apikey;
+        save();
+    }
+
+    public void setUsername(String username){
+        INSTANCE.username = username;
+        save();
+    }
 }
