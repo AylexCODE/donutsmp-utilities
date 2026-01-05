@@ -14,7 +14,6 @@ import donutsmputils.utils.RequestData;
 import donutsmputils.utils.RequestData.ResponseObject;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 public class Ah {
     public static int ah(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
