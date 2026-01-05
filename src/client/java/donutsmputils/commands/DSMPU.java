@@ -6,6 +6,8 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
+import donutsmputils.components.Settings.ConfigScreen;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
@@ -47,7 +49,9 @@ public class DSMPU {
     }
 
     public static int run(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        context.getSource().sendFeedback(Text.literal("Insufficient Command Args..."));
+        MinecraftClient client = context.getSource().getClient();
+
+        client.send(() -> client.setScreen(new ConfigScreen()));
         return 1;
     }
 }
