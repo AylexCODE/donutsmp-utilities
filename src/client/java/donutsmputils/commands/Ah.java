@@ -29,7 +29,7 @@ public class Ah {
 
         CompletableFuture.runAsync(() -> {
             try {
-                ResponseObject data = RequestData.getAuctionData("", "", false);
+                ResponseObject data = RequestData.getAuctionData("", "", false, true);
                 ah.setData(data.getResponse(), data.getStatus());
             }catch(Exception e){
                 ah.setData(new ArrayList<AuctionData>(), "Error ah");

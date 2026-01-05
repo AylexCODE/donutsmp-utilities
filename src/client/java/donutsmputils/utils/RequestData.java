@@ -19,7 +19,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class RequestData {
-    public static ResponseObject getAuctionData(String page, String search, boolean isSearching) {
+    public static ResponseObject getAuctionData(String page, String search, boolean isSearching, boolean isAhListing) {
         ArrayList<AuctionData> result = new ArrayList<>(); String status;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request;
@@ -31,11 +31,19 @@ public class RequestData {
                 .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"" +search +"\"}"))
                 .build();
         }else{
-            request = HttpRequest.newBuilder()
+            if(isAhListing){
+                 request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.donutsmp.net/v1/auction/list/1"))
                 .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
                 .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"" +ConfigManager.INSTANCE.username +"\"}"))
                 .build();
+            }else{
+                request = HttpRequest.newBuilder()
+                    .uri(URI.create("https://api.donutsmp.net/v1/auction/list/1"))
+                    .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
+                    .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"\"}"))
+                    .build();
+            }
         }
 
         try {

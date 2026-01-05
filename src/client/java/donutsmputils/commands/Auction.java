@@ -27,7 +27,7 @@ public class Auction {
         client.send(() -> client.setScreen(auctionScreen));
         CompletableFuture.runAsync(() -> {
             try {
-                ResponseObject data = RequestData.getAuctionData("", "", false);
+                ResponseObject data = RequestData.getAuctionData("", "",false ,false);
                 auctionScreen.setData(data.getResponse(), data.getStatus());
             }catch(Exception e){
                 auctionScreen.setData(new ArrayList<AuctionData>(), "Error ah");
