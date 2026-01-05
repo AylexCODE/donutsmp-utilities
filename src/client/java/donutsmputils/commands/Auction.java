@@ -7,23 +7,23 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import donutsmputils.components.Auctions.AuctionScreen;
+import donutsmputils.components.Settings.ConfigScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
 import donutsmputils.utils.RequestData.ResponseObject;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
 
 public class Auction {
     public static int auction(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        if(ConfigManager.INSTANCE.apikey.trim().isEmpty()){
-            MinecraftClient.getInstance().player.sendMessage(Text.of("No API Key Found for DonutSMP.\n/dsmpu apikey [your apikey]"), false);
+        MinecraftClient client = context.getSource().getClient();
+        if(ConfigManager.INSTANCE.apikey.isBlank()){
+            client.send(() -> client.setScreen(new ConfigScreen(true, false)));
             return 0;
         }
 
         AuctionScreen auctionScreen = new AuctionScreen();
-        MinecraftClient client = context.getSource().getClient();
         client.send(() -> client.setScreen(auctionScreen));
         CompletableFuture.runAsync(() -> {
             try {

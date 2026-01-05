@@ -17,14 +17,19 @@ import net.minecraft.client.MinecraftClient;
 
 public class Ah {
     public static int ah(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        if(ConfigManager.INSTANCE.apikey.trim().isEmpty() || ConfigManager.INSTANCE.username.trim().isEmpty()){
-            MinecraftClient client = context.getSource().getClient();
-            client.send(() -> client.setScreen(new ConfigScreen()));
+        MinecraftClient client = context.getSource().getClient();
+        if(ConfigManager.INSTANCE.apikey.isBlank() && ConfigManager.INSTANCE.username.isBlank()){
+            client.send(() -> client.setScreen(new ConfigScreen(true, true)));
+            return 1;
+        }else if(ConfigManager.INSTANCE.apikey.isBlank()){
+            client.send(() -> client.setScreen(new ConfigScreen(true, false)));
+            return 1;
+        }else if(ConfigManager.INSTANCE.username.isBlank()){
+            client.send(() -> client.setScreen(new ConfigScreen(false, true)));
             return 1;
         }
         
         AhScreen ah = new AhScreen();
-        MinecraftClient client = context.getSource().getClient();
         client.send(() -> client.setScreen(ah));
 
         CompletableFuture.runAsync(() -> {
