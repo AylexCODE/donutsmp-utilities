@@ -16,16 +16,16 @@ import net.minecraft.util.Identifier;
 public class AuctionScreen extends Screen {
     private static final Identifier TEXTURE = Identifier.of("donutsmp-utilities", "textures/gui/inventory_large.png");
     private ArrayList<AuctionData> data;
-    private boolean isLoading = true;
+    private String status = "";
     private int currentPageNumber = 1;
 
     public AuctionScreen(){
         super(Text.of("AuctionScreen"));
     }
     
-    public void setData(ArrayList<AuctionData> data){
+    public void setData(ArrayList<AuctionData> data, String status){
         this.data = data;
-        this.isLoading = false;
+        this.status = status;
     }
 
     @Override
@@ -44,11 +44,11 @@ public class AuctionScreen extends Screen {
         int size = 16;
         int slotNumber = 1;
 
-        if(isLoading){
+        if(status.isBlank()){
             context.drawText(this.textRenderer, Text.literal("..."), x, y - 11, 0xFF444444, false);
              return;
         }else{
-            context.drawText(this.textRenderer, Text.literal("Auction (Page " +currentPageNumber  +")"), x, y - 11, 0xFF444444, false);
+            context.drawText(this.textRenderer, Text.literal(status == "ok" ? ("Auction (Page " +currentPageNumber  +")") : status), x, y - 11, 0xFF444444, false);
         }
 
         for(AuctionData item : data){

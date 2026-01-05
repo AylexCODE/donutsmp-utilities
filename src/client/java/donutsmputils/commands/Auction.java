@@ -11,6 +11,7 @@ import donutsmputils.components.Auctions.AuctionScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
+import donutsmputils.utils.RequestData.ResponseObject;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
@@ -23,24 +24,14 @@ public class Auction {
         }
 
         AuctionScreen auctionScreen = new AuctionScreen();
-        // MinecraftClient.getInstance().player.sendMessage(Text.of("Getting Auction House Data..."), false);
         MinecraftClient client = context.getSource().getClient();
         client.send(() -> client.setScreen(auctionScreen));
         CompletableFuture.runAsync(() -> {
             try {
-                ArrayList<AuctionData> data = RequestData.getAuctionData(StringArgumentType.getString(context, "Page"), StringArgumentType.getString(context, "Search"), true);
-
-                // MinecraftClient client = MinecraftClient.getInstance();
-                // client.execute(() -> {
-                //     if(client != null){
-                //         for(String item : data){
-                //             client.player.sendMessage(Text.of(item), false);
-                //         }
-                //     }
-                // });
-                auctionScreen.setData(data);
+                ResponseObject data = RequestData.getAuctionData("", "", false);
+                auctionScreen.setData(data.getResponse(), data.getStatus());
             }catch(Exception e){
-                if(MinecraftClient.getInstance() != null) MinecraftClient.getInstance().player.sendMessage(Text.of("An error occurred: " + e.getMessage()), false);
+                auctionScreen.setData(new ArrayList<AuctionData>(), "Error ah");
             }
         }).exceptionally(ex -> {
             ex.printStackTrace();
