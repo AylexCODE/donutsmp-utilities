@@ -27,7 +27,7 @@ public class AuctionHouse {
         }else if(ConfigManager.INSTANCE.apikey.isBlank()){
             client.send(() -> client.setScreen(new ConfigScreen(true, false)));
             return 1;
-        }else if(ConfigManager.INSTANCE.username.isBlank()){
+        }else if(ConfigManager.INSTANCE.username.isBlank() && branch == "profile"){
             client.send(() -> client.setScreen(new ConfigScreen(false, true)));
             return 1;
         }

@@ -70,7 +70,7 @@ public class ConfigScreen extends Screen {
                     ConfigManager config = new ConfigManager();
                     client.setScreen(null);
                     statusTitle = Text.of("Success");
-                    statusMessage = Text.of("Configurations set, you can now use dsmpu commands");
+                    statusMessage = Text.of("Configurations set, you can now use dsmp commands");
                     if(requireAPIKey) config.setAPIKey(apiKeyField.getText());
                     if(requireUsername) config.setUsername(usernameField.getText());
                 }
