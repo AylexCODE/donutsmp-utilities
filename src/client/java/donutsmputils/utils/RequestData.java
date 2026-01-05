@@ -19,31 +19,23 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class RequestData {
-    public static ResponseObject getAuctionData(String page, String search, boolean isSearching, boolean isAhListing) {
+    public static ResponseObject getAuctionData(int page, String search, boolean isProfile) {
         ArrayList<AuctionData> result = new ArrayList<>(); String status;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request;
 
-        if(isSearching){
+        if(isProfile){
+            request = HttpRequest.newBuilder()
+                .uri(URI.create("https://api.donutsmp.net/v1/auction/list/1"))
+                .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
+                .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"" +ConfigManager.INSTANCE.username +"\"}"))
+                .build();
+        }else{
             request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.donutsmp.net/v1/auction/list/" +page))
                 .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
                 .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"" +search +"\"}"))
                 .build();
-        }else{
-            if(isAhListing){
-                 request = HttpRequest.newBuilder()
-                .uri(URI.create("https://api.donutsmp.net/v1/auction/list/1"))
-                .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
-                .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"" +ConfigManager.INSTANCE.username +"\"}"))
-                .build();
-            }else{
-                request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://api.donutsmp.net/v1/auction/list/1"))
-                    .header("Authorization", "Bearer " +ConfigManager.INSTANCE.apikey)
-                    .POST(HttpRequest.BodyPublishers.ofString("{\"search\": \"\"}"))
-                    .build();
-            }
         }
 
         try {
@@ -70,14 +62,11 @@ public class RequestData {
                 }
                 status = "ok";
             }else{
-                // System.err.println("API Call Failed with status code: " + response.statusCode());
                 // System.err.println(response.body());
                 if(response.statusCode() == 500){
-                    // result.add("No Items To Display...");
                     status = "No Items To Display...";
                 }else if(response.statusCode() == 401){
                     status = "Error Invalid API Key";
-                    // result.add("Error Invalid API KEY");
                 }else{
                     status = "Error Unknown";
                 }

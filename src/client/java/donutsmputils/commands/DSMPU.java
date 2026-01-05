@@ -1,6 +1,7 @@
 package donutsmputils.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -12,14 +13,36 @@ import net.minecraft.text.Text;
 
 public class DSMPU {
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess){
-        dispatcher.register(ClientCommandManager.literal("dsmpu")
+        dispatcher.register(ClientCommandManager.literal("dsmp")
             .executes(DSMPU::run)
             .then(ClientCommandManager.literal("ah")
-            .executes(Ah::ah))
+                .executes(AuctionHouse::auction)
+                .then(ClientCommandManager.literal("profile")
+                    .executes(AuctionHouse::profile)
+                )
+                .then(ClientCommandManager.argument("Search", StringArgumentType.string())
+                    .executes(AuctionHouse::search)
+                )
+                .then(ClientCommandManager.argument("Page", IntegerArgumentType.integer(1))
+                    .then(ClientCommandManager.argument("Search", StringArgumentType.greedyString())
+                        .executes(AuctionHouse::searchWPage)
+                    )
+                )
+            )
             .then(ClientCommandManager.literal("auction")
-            .then(ClientCommandManager.argument("Page", StringArgumentType.string())
-            .then(ClientCommandManager.argument("Search", StringArgumentType.greedyString())
-            .executes(Auction::auction))))
+                .executes(AuctionHouse::auction)
+                .then(ClientCommandManager.argument("Search", StringArgumentType.string())
+                    .executes(AuctionHouse::search)
+                )
+                .then(ClientCommandManager.argument("Page", IntegerArgumentType.integer(1))
+                    .then(ClientCommandManager.argument("Search", StringArgumentType.greedyString())
+                        .executes(AuctionHouse::searchWPage)
+                    )
+                )
+                .then(ClientCommandManager.literal("profile")
+                    .executes(AuctionHouse::profile)
+                )
+            )
         );
     }
 

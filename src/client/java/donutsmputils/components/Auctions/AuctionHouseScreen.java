@@ -7,33 +7,35 @@ import donutsmputils.utils.AuctionData;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-// import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
-public class AhScreen extends Screen {
-    private static final Identifier TEXTURE = Identifier.of("donutsmp-utilities", "textures/gui/inventory_small.png");
-    // private static final int ELEMENT_HEIGHT = 20;
-    // private static final int ELEMENT_SPACING = 10;
+public class AuctionHouseScreen extends Screen {
+    private static final Identifier TEXTURE = Identifier.of("donutsmp-utilities", "textures/gui/inventory_large.png");
     private ArrayList<AuctionData> data;
     private String status = "";
+    private int currentPageNumber = 1;
 
-    public AhScreen(){
+    public AuctionHouseScreen(){
         super(Text.of("AuctionScreen"));
     }
     
-    public void setData(ArrayList<AuctionData> data, String status){
+    public void setData(ArrayList<AuctionData> data, String status, int page){
         this.data = data;
         this.status = status;
+        this.currentPageNumber = page;
+        System.out.println(page);
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-
+        
         int invWidth = 176;
-        int invHeight = 77;
+        int invHeight = 130;
         int invX = (this.width - invWidth) / 2;
         int invY = (this.height - invHeight) / 2;
         context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, invX, invY, 0, 0, invWidth, invHeight, invWidth, invHeight);
@@ -45,9 +47,9 @@ public class AhScreen extends Screen {
 
         if(status.isBlank()){
             context.drawText(this.textRenderer, Text.literal("..."), x, y - 11, 0xFF444444, false);
-            return;
+             return;
         }else{
-            context.drawText(this.textRenderer, Text.literal(status == "ok" ? "My Auction House Items" : status), x, y - 11, 0xFF444444, false);
+            context.drawText(this.textRenderer, Text.literal(status == "ok" ? ("Auction (Page " +currentPageNumber  +")") : status), x, y - 11, 0xFF444444, false);
         }
 
         for(AuctionData item : data){
@@ -58,11 +60,11 @@ public class AhScreen extends Screen {
                 List<Text> customLines = List.of(
                     Text.literal(item.getItemData().getName().getString()).formatted(Formatting.WHITE),
                     Text.literal("Price: ").append(Text.literal(item.getItemPrice()).formatted(Formatting.GREEN)),
+                    Text.literal("Seller: ").append(Text.literal(item.getItemSeller()).formatted(Formatting.GREEN)),
                     Text.literal("Time Left: ").append(Text.literal(item.getItemTimeLeft()).formatted(Formatting.GREEN))
                 );
                 context.drawTooltip(this.textRenderer, customLines, mouseX, mouseY);
                 context.fill(x, y, x + size, y + size, 0x70FFFFFF);
-                // context.drawItemTooltip(this.textRenderer, itemStack , mouseX, mouseY);
             }
 
             x += 18; slotNumber++;
@@ -70,6 +72,23 @@ public class AhScreen extends Screen {
                 x = (this.width - invWidth) / 2 + 8;
                 y += 18;
                 slotNumber = 1;
+            }
+        }
+
+        int nextPageX = ((this.width - invWidth) / 2 + 8) + (18 * 8);
+        int prevPageX = ((this.width - invWidth) / 2 + 8);
+        int allPageY = ((this.height - invHeight) / 2 + 17) + (18 * 5) - 1;
+        context.drawItem(new ItemStack(Items.ARROW), nextPageX, allPageY);
+        if(mouseX >= nextPageX && mouseX <= nextPageX + 16 && mouseY >= allPageY && mouseY <= allPageY + 16){
+            context.drawTooltip(this.textRenderer, Text.literal("Next Page"), mouseX, mouseY);
+            context.fill(nextPageX, allPageY, nextPageX + size, allPageY + size, 0x70FFFFFF);
+        }
+
+        if(currentPageNumber > 1){
+            context.drawItem(new ItemStack(Items.ARROW), prevPageX, allPageY);
+            if(mouseX >= prevPageX && mouseX <= prevPageX + 16 && mouseY >= allPageY && mouseY <= allPageY + 16){
+                context.drawTooltip(this.textRenderer, Text.literal("Previous Page"), mouseX, mouseY);
+                context.fill(prevPageX, allPageY, prevPageX + size, allPageY + size, 0x70FFFFFF);
             }
         }
     }
