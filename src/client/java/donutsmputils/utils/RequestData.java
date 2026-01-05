@@ -19,8 +19,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class RequestData {
-    public static ArrayList<AuctionData> getAuctionData(String page, String search, boolean isSearching) {
-        ArrayList<AuctionData> result = new ArrayList<>();
+    public static ResponseObject getAuctionData(String page, String search, boolean isSearching) {
+        ArrayList<AuctionData> result = new ArrayList<>(); String status;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request;
 
@@ -60,20 +60,44 @@ public class RequestData {
                         result.add(new AuctionData(new ItemStack(Registries.ITEM.get(Identifier.of(itemId)), item.getItem().getCount()), price, time, item.getSeller().getName()));
                     }
                 }
+                status = "ok";
             }else{
                 // System.err.println("API Call Failed with status code: " + response.statusCode());
                 // System.err.println(response.body());
                 if(response.statusCode() == 500){
                     // result.add("No Items To Display...");
+                    status = "No Items To Display...";
                 }else if(response.statusCode() == 401){
+                    status = "Error Invalid API Key";
                     // result.add("Error Invalid API KEY");
+                }else{
+                    status = "Error Unknown";
                 }
             }
         } catch (IOException | InterruptedException e) {
+            status = "Error IO | Interrupted";
             e.printStackTrace();
         }
 
-        return result;
+        return new ResponseObject(result, status);
+    }
+
+    public static class ResponseObject {
+        private ArrayList<AuctionData> response;
+        private String status;
+
+        public ResponseObject(ArrayList<AuctionData> response, String status){
+            this.response = response;
+            this.status = status;
+        }
+
+        public ArrayList<AuctionData> getResponse(){
+            return response;
+        }
+
+        public String getStatus(){
+            return status;
+        }
     }
 
     static class Response {
