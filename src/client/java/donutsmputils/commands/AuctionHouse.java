@@ -10,7 +10,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import donutsmputils.components.Auctions.AuctionHouseProfileScreen;
 import donutsmputils.components.Auctions.AuctionHouseScreen;
-import donutsmputils.components.Settings.ConfigScreen;
+import donutsmputils.components.Settings.AuctionPromptScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
@@ -22,13 +22,13 @@ public class AuctionHouse {
     public static int handleCommand(CommandContext<FabricClientCommandSource> context, String branch) throws CommandSyntaxException {
         MinecraftClient client = context.getSource().getClient();
         if((ConfigManager.INSTANCE.apikey.isBlank() && ConfigManager.INSTANCE.username.isBlank()) && branch == "profile"){
-            client.send(() -> client.setScreen(new ConfigScreen(true, true)));
+            client.send(() -> client.setScreen(new AuctionPromptScreen(true, true)));
             return 1;
         }else if(ConfigManager.INSTANCE.apikey.isBlank()){
-            client.send(() -> client.setScreen(new ConfigScreen(true, false)));
+            client.send(() -> client.setScreen(new AuctionPromptScreen(true, false)));
             return 1;
         }else if(ConfigManager.INSTANCE.username.isBlank() && branch == "profile"){
-            client.send(() -> client.setScreen(new ConfigScreen(false, true)));
+            client.send(() -> client.setScreen(new AuctionPromptScreen(false, true)));
             return 1;
         }
         
