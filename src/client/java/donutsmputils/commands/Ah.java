@@ -6,7 +6,8 @@ import java.util.concurrent.CompletableFuture;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import donutsmputils.components.Auction.AhScreen;
+import donutsmputils.components.Auctions.AhScreen;
+import donutsmputils.components.Settings.ConfigScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
@@ -16,11 +17,9 @@ import net.minecraft.text.Text;
 
 public class Ah {
     public static int ah(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        if(ConfigManager.INSTANCE.apikey.trim().isEmpty()){
-            MinecraftClient.getInstance().player.sendMessage(Text.of("No API Key Found for DonutSMP.\n/dsmpu apikey [your apikey]"), false);
-            return 1;
-        }else if(ConfigManager.INSTANCE.username.trim().isEmpty()){
-            MinecraftClient.getInstance().player.sendMessage(Text.of("No Username Found for DonutSMP.\n/dsmpu username [your username]"), false);
+        if(ConfigManager.INSTANCE.apikey.trim().isEmpty() || ConfigManager.INSTANCE.username.trim().isEmpty()){
+            MinecraftClient client = context.getSource().getClient();
+            client.send(() -> client.setScreen(new ConfigScreen()));
             return 1;
         }
         

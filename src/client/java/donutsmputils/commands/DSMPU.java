@@ -20,12 +20,6 @@ public class DSMPU {
             .then(ClientCommandManager.argument("Page", StringArgumentType.string())
             .then(ClientCommandManager.argument("Search", StringArgumentType.greedyString())
             .executes(Auction::auction))))
-            .then(ClientCommandManager.literal("apikey")
-            .then(ClientCommandManager.argument("API Key", StringArgumentType.string())
-            .executes(SetConfig::setAPIKey)))
-            .then(ClientCommandManager.literal("username")
-            .then(ClientCommandManager.argument("Username", StringArgumentType.string())
-            .executes(SetConfig::setUsername)))
         );
     }
 

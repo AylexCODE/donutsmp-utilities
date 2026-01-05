@@ -7,7 +7,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import donutsmputils.components.Auction.AuctionScreen;
+import donutsmputils.components.Auctions.AuctionScreen;
 import donutsmputils.utils.AuctionData;
 import donutsmputils.utils.ConfigManager;
 import donutsmputils.utils.RequestData;
