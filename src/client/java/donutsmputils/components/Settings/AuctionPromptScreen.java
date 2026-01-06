@@ -45,11 +45,11 @@ public class AuctionPromptScreen extends Screen {
 
         int apiKeyFieldX = (width - FIELD_WIDTH) / 2;
         int apiKeyFieldY = ((height - ELEMENT_HEIGHT) / 2) - 30 + fieldOffsetY;
-        TextFieldWidget apiKeyField = new TextFieldWidget(textRenderer, apiKeyFieldX, apiKeyFieldY, FIELD_WIDTH,ELEMENT_HEIGHT, Text.of("Eyyy"));
+        TextFieldWidget apiKeyField = new TextFieldWidget(textRenderer, apiKeyFieldX, apiKeyFieldY, FIELD_WIDTH,ELEMENT_HEIGHT, Text.of("API Key"));
         
         int usernameFieldX = (width - FIELD_WIDTH) / 2;
         int usernameFieldY = ((height - ELEMENT_HEIGHT) / 2) + 15 + fieldOffsetY;
-        TextFieldWidget usernameField = new TextFieldWidget(textRenderer, usernameFieldX, usernameFieldY, FIELD_WIDTH,ELEMENT_HEIGHT, Text.of("Eyyy"));
+        TextFieldWidget usernameField = new TextFieldWidget(textRenderer, usernameFieldX, usernameFieldY, FIELD_WIDTH,ELEMENT_HEIGHT, Text.of("Username"));
 
         int submitButtonX = ((width + BUTTON_WIDTH) / 2) - BUTTON_WIDTH - (BUTTON_WIDTH / 2) - 5;
         ButtonWidget submitButton = ButtonWidget.builder(Text.of("Confirm"), button -> {
