@@ -22,7 +22,7 @@ loom {
 	splitEnvironmentSourceSets()
 
 	mods {
-		"donutsmp-utilities" {
+		"donutsmp-statistics" {
 			sourceSet sourceSets.main
 			sourceSet sourceSets.client
 		}
