@@ -1,9 +1,9 @@
-package donutsmputils.components.Auctions;
+package donutsmpstatistics.components.Auctions;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import donutsmputils.utils.AuctionData;
+import donutsmpstatistics.utils.AuctionData;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -14,7 +14,7 @@ import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 public class AuctionHouseScreen extends Screen {
-    private static final Identifier TEXTURE = Identifier.of("donutsmp-utilities", "textures/gui/inventory_large.png");
+    private static final Identifier TEXTURE = Identifier.of("donutsmp-statistics", "textures/gui/inventory_large.png");
     private ArrayList<AuctionData> data;
     private String status = "";
     private int currentPageNumber = 1;

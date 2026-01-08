@@ -1,4 +1,4 @@
-package donutsmputils.utils;
+package donutsmpstatistics.utils;
 
 import net.minecraft.item.ItemStack;
 

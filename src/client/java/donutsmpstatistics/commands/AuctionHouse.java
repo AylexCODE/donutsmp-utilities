@@ -1,4 +1,4 @@
-package donutsmputils.commands;
+package donutsmpstatistics.commands;
 
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -8,13 +8,13 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import donutsmputils.components.Auctions.AuctionHouseProfileScreen;
-import donutsmputils.components.Auctions.AuctionHouseScreen;
-import donutsmputils.components.Settings.AuctionPromptScreen;
-import donutsmputils.utils.AuctionData;
-import donutsmputils.utils.ConfigManager;
-import donutsmputils.utils.RequestData;
-import donutsmputils.utils.RequestData.ResponseObject;
+import donutsmpstatistics.components.Auctions.AuctionHouseProfileScreen;
+import donutsmpstatistics.components.Auctions.AuctionHouseScreen;
+import donutsmpstatistics.components.Settings.AuctionPromptScreen;
+import donutsmpstatistics.utils.AuctionData;
+import donutsmpstatistics.utils.ConfigManager;
+import donutsmpstatistics.utils.RequestData;
+import donutsmpstatistics.utils.RequestData.ResponseObject;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.MinecraftClient;
 

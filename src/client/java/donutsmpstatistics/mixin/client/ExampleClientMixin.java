@@ -1,4 +1,4 @@
-package donutsmputils.mixin.client;
+package donutsmpstatistics.mixin.client;
 
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Mixin;

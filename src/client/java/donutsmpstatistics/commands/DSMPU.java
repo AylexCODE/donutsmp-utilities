@@ -1,4 +1,4 @@
-package donutsmputils.commands;
+package donutsmpstatistics.commands;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
@@ -6,7 +6,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import donutsmputils.components.Settings.ConfigScreen;
+import donutsmpstatistics.components.Settings.ConfigScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;

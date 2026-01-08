@@ -1,6 +1,6 @@
-package donutsmputils.components.Settings;
+package donutsmpstatistics.components.Settings;
 
-import donutsmputils.utils.ConfigManager;
+import donutsmpstatistics.utils.ConfigManager;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;

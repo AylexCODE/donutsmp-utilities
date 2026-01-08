@@ -1,4 +1,4 @@
-package donutsmputils.utils;
+package donutsmpstatistics.utils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

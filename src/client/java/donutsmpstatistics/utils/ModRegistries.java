@@ -1,6 +1,6 @@
-package donutsmputils.utils;
+package donutsmpstatistics.utils;
 
-import donutsmputils.commands.DSMPU;
+import donutsmpstatistics.commands.DSMPU;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 
 public class ModRegistries {
