@@ -55,17 +55,17 @@ public class AuctionHouse {
                 try{
                     if(branch == "search"){
                         ResponseObject data = RequestData.getAuctionData(1, StringArgumentType.getString(context, "Search"), false);
-                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), 1);
+                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), StringArgumentType.getString(context, "Search"), 1);
                     }else if(branch == "searchWPage"){
                         ResponseObject data = RequestData.getAuctionData(IntegerArgumentType.getInteger(context, "Page"), StringArgumentType.getString(context, "Search"), false);
-                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), IntegerArgumentType.getInteger(context, "Page"));
+                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), StringArgumentType.getString(context, "Search"), IntegerArgumentType.getInteger(context, "Page"));
                     }else{
                         ResponseObject data = RequestData.getAuctionData(1, "", false);
-                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), 1);
+                        auctionHouseScreen.setData(data.getResponse(), data.getStatus(), "", 1);
                     }
                 }catch(Exception e){
                     System.out.println(e);
-                    auctionHouseScreen.setData(new ArrayList<AuctionData>(), "Error Auction",0);
+                    auctionHouseScreen.setData(new ArrayList<AuctionData>(), "Error Auction", "", 0);
                 }
             }).exceptionally(ex -> {
                 ex.printStackTrace();

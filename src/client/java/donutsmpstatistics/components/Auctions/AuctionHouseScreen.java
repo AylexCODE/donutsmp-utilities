@@ -2,8 +2,11 @@ package donutsmpstatistics.components.Auctions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import donutsmpstatistics.utils.AuctionData;
+import donutsmpstatistics.utils.RequestData;
+import donutsmpstatistics.utils.RequestData.ResponseObject;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
@@ -12,7 +15,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -24,6 +26,7 @@ public class AuctionHouseScreen extends Screen {
     private static final ArrayList<buttonSlot> clickableSlots = new ArrayList<>();
     private ArrayList<AuctionData> data;
     private String status = "";
+    private String search = "";
     private int currentPageNumber = 1;
     private int draggingItem = 0;
     private long dragStart = 0L;
@@ -32,9 +35,10 @@ public class AuctionHouseScreen extends Screen {
         super(Text.of("AuctionScreen"));
     }
     
-    public void setData(ArrayList<AuctionData> data, String status, int page){
+    public void setData(ArrayList<AuctionData> data, String status, String search, int page){
         this.data = data;
         this.status = status;
+        this.search = search;
         this.currentPageNumber = page;
         System.out.println(page);
     }
@@ -108,6 +112,20 @@ public class AuctionHouseScreen extends Screen {
                 context.fill(prevPageX, allPageY, prevPageX + size, allPageY + size, 0x70FFFFFF);
             }
         }
+    }
+
+    public void handleNextPage(){
+        CompletableFuture.runAsync(() -> {
+                try{
+                    ResponseObject data = RequestData.getAuctionData(currentPageNumber, search, false);
+                    setData(data.getResponse(), data.getStatus(), search, currentPageNumber);
+                }catch(Exception e){
+                    setData(new ArrayList<AuctionData>(), "Error Auction", "", 0);
+                }
+            }).exceptionally(ex -> {
+                ex.printStackTrace();
+                return null;
+            });
     }
 
     @Override
