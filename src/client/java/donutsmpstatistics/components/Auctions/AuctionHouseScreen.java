@@ -4,20 +4,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 import donutsmpstatistics.utils.AuctionData;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Util;
 
 public class AuctionHouseScreen extends Screen {
     private static final Identifier TEXTURE = Identifier.of("donutsmp-statistics", "textures/gui/inventory_large.png");
+    private static final ArrayList<buttonSlot> clickableSlots = new ArrayList<>();
     private ArrayList<AuctionData> data;
     private String status = "";
     private int currentPageNumber = 1;
+    private int draggingItem = 0;
+    private long dragStart = 0L;
 
     public AuctionHouseScreen(){
         super(Text.of("AuctionScreen"));
@@ -78,18 +87,55 @@ public class AuctionHouseScreen extends Screen {
         int nextPageX = ((this.width - invWidth) / 2 + 8) + (18 * 8);
         int prevPageX = ((this.width - invWidth) / 2 + 8);
         int allPageY = ((this.height - invHeight) / 2 + 17) + (18 * 5) - 1;
-        context.drawItem(new ItemStack(Items.ARROW), nextPageX, allPageY);
+
+        if(draggingItem != 0){
+            long elapsedTime = Util.getMeasuringTimeMs() - dragStart;
+            if (elapsedTime >= 100L) {
+                draggingItem = 0;
+            }
+        }
+
+        context.drawItem(new ItemStack(Items.ARROW), draggingItem == 1 ? mouseX - 6: nextPageX, draggingItem == 1 ? mouseY - 6: allPageY); clickableSlots.add(new buttonSlot(nextPageX, allPageY, 1));
         if(mouseX >= nextPageX && mouseX <= nextPageX + 16 && mouseY >= allPageY && mouseY <= allPageY + 16){
             context.drawTooltip(this.textRenderer, Text.literal("Next Page"), mouseX, mouseY);
             context.fill(nextPageX, allPageY, nextPageX + size, allPageY + size, 0x70FFFFFF);
         }
 
         if(currentPageNumber > 1){
-            context.drawItem(new ItemStack(Items.ARROW), prevPageX, allPageY);
+            context.drawItem(new ItemStack(Items.ARROW), draggingItem == 1 ? mouseX - 6: prevPageX, draggingItem == 1 ? mouseY - 6: allPageY); clickableSlots.add(new buttonSlot(prevPageX, allPageY, 1));
             if(mouseX >= prevPageX && mouseX <= prevPageX + 16 && mouseY >= allPageY && mouseY <= allPageY + 16){
                 context.drawTooltip(this.textRenderer, Text.literal("Previous Page"), mouseX, mouseY);
                 context.fill(prevPageX, allPageY, prevPageX + size, allPageY + size, 0x70FFFFFF);
             }
+        }
+    }
+
+    @Override
+    public boolean mouseClicked(Click click, boolean doubled){
+        for(buttonSlot slot : clickableSlots){
+            if(slot.isClickable(click.x(), click.y())){
+                System.out.println(slot.isClickable(click.x(), click.y()));
+                MinecraftClient.getInstance().getSoundManager().play(
+                    PositionedSoundInstance.ui(SoundEvents.BLOCK_TRIPWIRE_CLICK_OFF, 1.0f)
+                );
+
+                draggingItem = slot.button();
+                dragStart = Util.getMeasuringTimeMs();
+                return true;
+            }
+        }
+        return super.mouseClicked(click, doubled);
+    }
+
+    @Override
+    public boolean mouseReleased(Click click){
+        draggingItem = 0;
+        return super.mouseReleased(click);
+    }
+
+    public record buttonSlot(int x, int y, int button){
+        public boolean isClickable(double mouseX, double mouseY){
+            return mouseX >= x && mouseX <= x + 16 && mouseY >= y && mouseY <= y + 16;
         }
     }
 }
