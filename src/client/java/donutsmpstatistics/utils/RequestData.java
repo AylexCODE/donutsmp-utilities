@@ -75,21 +75,27 @@ public class RequestData {
             status = "Error IO | Interrupted";
             e.printStackTrace();
         }
-
-        return new ResponseObject(result, status);
+System.out.println(page);
+        return new ResponseObject(result, status, page);
     }
 
     public static class ResponseObject {
         private ArrayList<AuctionData> response;
+        private int page;
         private String status;
 
-        public ResponseObject(ArrayList<AuctionData> response, String status){
+        public ResponseObject(ArrayList<AuctionData> response, String status, int page){
             this.response = response;
             this.status = status;
+            this.page = page;
         }
 
         public ArrayList<AuctionData> getResponse(){
             return response;
+        }
+
+        public int getPage(){
+            return page;
         }
 
         public String getStatus(){

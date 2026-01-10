@@ -30,6 +30,7 @@ public class AuctionHouseScreen extends Screen {
     private int currentPageNumber = 1;
     private int draggingItem = 0;
     private long dragStart = 0L;
+    private boolean isLoading = false;
 
     public AuctionHouseScreen(){
         super(Text.of("AuctionScreen"));
@@ -40,7 +41,7 @@ public class AuctionHouseScreen extends Screen {
         this.status = status;
         this.search = search;
         this.currentPageNumber = page;
-        System.out.println(page);
+        this.isLoading = false;
     }
 
     @Override
@@ -106,7 +107,7 @@ public class AuctionHouseScreen extends Screen {
         }
 
         if(currentPageNumber > 1){
-            context.drawItem(new ItemStack(Items.ARROW), draggingItem == 1 ? mouseX - 6: prevPageX, draggingItem == 1 ? mouseY - 6: allPageY); clickableSlots.add(new buttonSlot(prevPageX, allPageY, 1));
+            context.drawItem(new ItemStack(Items.ARROW), draggingItem == 2 ? mouseX - 6: prevPageX, draggingItem == 2 ? mouseY - 6: allPageY); clickableSlots.add(new buttonSlot(prevPageX, allPageY, 2));
             if(mouseX >= prevPageX && mouseX <= prevPageX + 16 && mouseY >= allPageY && mouseY <= allPageY + 16){
                 context.drawTooltip(this.textRenderer, Text.literal("Previous Page"), mouseX, mouseY);
                 context.fill(prevPageX, allPageY, prevPageX + size, allPageY + size, 0x70FFFFFF);
@@ -114,35 +115,72 @@ public class AuctionHouseScreen extends Screen {
         }
     }
 
-    public void handleNextPage(){
+    private void handleNextPage(){
         CompletableFuture.runAsync(() -> {
-                try{
-                    ResponseObject data = RequestData.getAuctionData(currentPageNumber, search, false);
-                    setData(data.getResponse(), data.getStatus(), search, currentPageNumber);
-                }catch(Exception e){
-                    setData(new ArrayList<AuctionData>(), "Error Auction", "", 0);
-                }
-            }).exceptionally(ex -> {
-                ex.printStackTrace();
-                return null;
-            });
+            try{
+                this.isLoading = true;
+                int nextPage = currentPageNumber + 1;
+                ResponseObject data = RequestData.getAuctionData(nextPage, search, false);
+                setData(data.getResponse(), data.getStatus(), search, data.getPage());
+            }catch(Exception e){
+                setData(new ArrayList<AuctionData>(), "Error Auction", "", 1);
+            }
+        }).exceptionally(ex -> {
+            ex.printStackTrace();
+            return null;
+        });
+    }
+
+    private void handlePreviousPage(){
+        CompletableFuture.runAsync(() -> {
+            try{
+                this.isLoading = true;
+                int prevPage = currentPageNumber - 1;
+                ResponseObject data = RequestData.getAuctionData(prevPage, search, false);
+                setData(data.getResponse(), data.getStatus(), search, data.getPage());
+            }catch(Exception e){
+                setData(new ArrayList<AuctionData>(), "Error Auction", "", 1);
+            }
+        }).exceptionally(ex -> {
+            ex.printStackTrace();
+            return null;
+        });
     }
 
     @Override
     public boolean mouseClicked(Click click, boolean doubled){
-        for(buttonSlot slot : clickableSlots){
-            if(slot.isClickable(click.x(), click.y())){
-                System.out.println(slot.isClickable(click.x(), click.y()));
-                MinecraftClient.getInstance().getSoundManager().play(
-                    PositionedSoundInstance.ui(SoundEvents.BLOCK_TRIPWIRE_CLICK_OFF, 1.0f)
-                );
+        if(!isLoading){
+            for(buttonSlot slot : clickableSlots){
+                if(slot.isClicked(click.x(), click.y())){
+                    draggingItem = slot.button();
+                    dragStart = Util.getMeasuringTimeMs();
 
-                draggingItem = slot.button();
-                dragStart = Util.getMeasuringTimeMs();
-                return true;
+                    switch(slot.button()){
+                        case 1:
+                            if(status == "ok"){
+                                playNavigationSound();
+                                handleNextPage();
+                            }
+                            break;
+                        case 2:
+                            if(currentPageNumber > 1){
+                                playNavigationSound();
+                                handlePreviousPage();
+                            }
+                        default:
+                            break;
+                    }
+                    return true;
+                }
             }
         }
         return super.mouseClicked(click, doubled);
+    }
+
+    private void playNavigationSound(){
+        MinecraftClient.getInstance().getSoundManager().play(
+            PositionedSoundInstance.ui(SoundEvents.BLOCK_TRIPWIRE_CLICK_OFF, 1.0f)
+        );
     }
 
     @Override
@@ -152,7 +190,7 @@ public class AuctionHouseScreen extends Screen {
     }
 
     public record buttonSlot(int x, int y, int button){
-        public boolean isClickable(double mouseX, double mouseY){
+        public boolean isClicked(double mouseX, double mouseY){
             return mouseX >= x && mouseX <= x + 16 && mouseY >= y && mouseY <= y + 16;
         }
     }
